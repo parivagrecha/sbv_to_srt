@@ -18,12 +18,28 @@ def convert_sbv_to_srt(sbv_content):
 
         if len(lines) >= 2:
             time_line = lines[0]
+
+            start_time, end_time = time_line.split(",")
+
+            # Convert timestamps properly
+            start_time = start_time.replace(".", ",")
+            end_time = end_time.replace(".", ",")
+
+            
+            if len(start_time.split(":")[0]) == 1:
+                start_time = "0" + start_time
+
+            if len(end_time.split(":")[0]) == 1:
+                end_time = "0" + end_time
+
             subtitle_text = "\n".join(lines[1:])
 
-            # Convert commas in timestamps
-            time_line = time_line.replace(".", ",")
+            srt_block = (
+                f"{i}\n"
+                f"{start_time} --> {end_time}\n"
+                f"{subtitle_text}\n"
+            )
 
-            srt_block = f"{i}\n{time_line}\n{subtitle_text}\n"
             srt_output.append(srt_block)
 
     return "\n".join(srt_output)
